@@ -33,6 +33,7 @@ after_success:
  - docker ps -a
  #- cat ./output.out
  - lsof -i :8011
+ - curl localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
  - statusCode=$(curl -sw '%{http_code}\n' http://127.0.0.1:8011/v1/query?name=pod -o /dev/null)
  - echo $statusCode
  - |

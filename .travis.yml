@@ -12,6 +12,7 @@ services:
 
 install:
   - cd $TRAVIS_BUILD_DIR/service && make all
+  - cd $TRAVIS_BUILD_DIR/app && yarn install
 
 before_script:
   - docker pull dgraph/dgraph
@@ -23,8 +24,13 @@ script:
   - cd $TRAVIS_BUILD_DIR/service
   - go test -v ./... -coverprofile=coverage.txt -covermode=atomic
   - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT} .
+  - cd $TRAVIS_BUILD_DIR/app
+  - yarn test --coverage
+  - docker build --no-cache -f Dockerfile -t katlas-browser:${TRAVIS_COMMIT} .
 
 after_success:
-  - cd $TRAVIS_BUILD_DIR/services
+  - cd $TRAVIS_BUILD_DIR/service
   - bash <(curl -s https://codecov.io/bash)
+  - cd $TRAVIS_BUILD_DIR/app
+  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json
 

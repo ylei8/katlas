@@ -33,4 +33,3 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - cd $TRAVIS_BUILD_DIR/app
   - bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json
-

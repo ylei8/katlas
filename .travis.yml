@@ -19,7 +19,8 @@ before_script:
  - mkdir -p /tmp/data
  - docker run -d -it -p 5080:5080 -p 6080:6080 -p 8080:8080 -p 9080:9080 -p 8000:8000 -v /tmp/data:/dgraph --name diggy dgraph/dgraph dgraph zero
  - docker exec -d -it diggy dgraph alpha --lru_mb 2048 --zero localhost:5080
-
+ - TRAVIS_COMMIT_SHORTID="${TRAVIS_COMMIT:0:7}"
+ - echo "${TRAVIS_COMMIT_SHORTID}"
 #script:
 # - cd $TRAVIS_BUILD_DIR/service
 # - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT} .
@@ -34,6 +35,7 @@ after_success:
  - docker ps -a
  #- cat ./output.out
  - lsof -i :8011
+ 
  - docker network create katlasnet
  - docker network connect katlasnet diggy
  - docker network connect katlasnet katlas-service

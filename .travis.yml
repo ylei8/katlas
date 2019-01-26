@@ -15,10 +15,15 @@ install:
  #- cd $TRAVIS_BUILD_DIR/app && yarn install
 
 before_script:
+ - ifconfig -a
  - docker pull dgraph/dgraph
  - mkdir -p /tmp/data
  - docker run -d -it -p 5080:5080 -p 6080:6080 -p 8080:8080 -p 9080:9080 -p 8000:8000 -v /tmp/data:/dgraph --name diggy dgraph/dgraph dgraph zero
  - docker exec -d -it diggy dgraph alpha --lru_mb 2048 --zero localhost:5080
+ - netstat -anl
+ - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl http://localhost:8080/health
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
  - TRAVIS_COMMIT_SHORTID="${TRAVIS_COMMIT:0:7}"
  - echo "${TRAVIS_COMMIT_SHORTID}"
 script:
@@ -30,12 +35,13 @@ after_success:
  - cd $TRAVIS_BUILD_DIR/service
  - go run server.go 2> output.out &
  - docker run -d -it -p 8011:8011 -e ENV_NAMESPACE=qal -e SERVER_TYPE=http -e DGRAPH_HOST=localhost:9080 --name katlas-service katlas-service:${TRAVIS_COMMIT_SHORTID}
-
+ - docker logs katlas-service
  - sleep 10s
  - docker ps -a
  - lsof -i :8080
- - netstat -anL
+ - netstat -anl
  - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl http://localhost:8080/health
  - curl -sw '%{http_code}\n' http://localhost:9080/health
  - curl -sw '%{http_code}\n' http://localhost:8011/health
  - docker network create katlasnet

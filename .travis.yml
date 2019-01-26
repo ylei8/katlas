@@ -38,6 +38,7 @@ after_success:
  - cd $TRAVIS_BUILD_DIR/service
 # - go run server.go 2> output.out &
  - docker run -d -it -p 8011:8011 -e ENV_NAMESPACE=qal -e SERVER_TYPE=http -e DGRAPH_HOST=localhost:9080 --name katlas-service katlas-service:${TRAVIS_COMMIT_SHORTID}
+ #
  - docker logs katlas-service
  - sleep 10s
  - docker ps -a

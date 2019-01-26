@@ -36,6 +36,7 @@ after_success:
  #- cat ./output.out
  - lsof -i :8011
  - curl http://localhost:8080/health
+ - curl http://localhost:8011/health
  - docker network create katlasnet
  - docker network connect katlasnet diggy
  - docker network connect katlasnet katlas-service

@@ -23,8 +23,8 @@ before_script:
  - echo "${TRAVIS_COMMIT_SHORTID}"
 #script:
 # - cd $TRAVIS_BUILD_DIR/service
-# - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT} .
-# - docker images katlas-service:${TRAVIS_COMMIT}
+ - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT} .
+ - docker images katlas-service:${TRAVIS_COMMIT}
 
 after_success:
  #- cd $TRAVIS_BUILD_DIR/service

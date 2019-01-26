@@ -32,8 +32,10 @@ script:
  - docker images katlas-service:${TRAVIS_COMMIT_SHORTID}
 
 after_success:
+ - sleep 10s
  - cd $TRAVIS_BUILD_DIR/service
- - go run server.go 2> output.out &
+# - go run server.go 2> output.out &
+ - ls -l util/
  - docker run -d -it -p 8011:8011 -e ENV_NAMESPACE=qal -e SERVER_TYPE=http -e DGRAPH_HOST=localhost:9080 --name katlas-service katlas-service:${TRAVIS_COMMIT_SHORTID}
  - docker logs katlas-service
  - sleep 10s
@@ -45,7 +47,7 @@ after_success:
  - docker network create katlasnet
  - docker network connect katlasnet diggy
  - docker network connect katlasnet katlas-service
- 
+ - cat output.out
  #- curl http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
  - curl -sw '%{http_code}\n' http://localhost:8080/health
  - curl -sw '%{http_code}\n' http://localhost:9080/health

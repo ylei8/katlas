@@ -20,10 +20,10 @@ before_script:
  - mkdir -p /tmp/data
  - docker run -d -it -p 5080:5080 -p 6080:6080 -p 8080:8080 -p 9080:9080 -p 8000:8000 -v /tmp/data:/dgraph --name diggy dgraph/dgraph dgraph zero
  - docker exec -d -it diggy dgraph alpha --lru_mb 2048 --zero localhost:5080
+ - sleep 5s
  - netstat -anl
  - docker ps -a
  - curl -sw '%{http_code}\n' http://localhost:8080/health
- - curl -sw '%{http_code}\n' http://localhost:9080/health
  - TRAVIS_COMMIT_SHORTID="${TRAVIS_COMMIT:0:7}"
  - echo "${TRAVIS_COMMIT_SHORTID}"
 script:
@@ -40,7 +40,6 @@ after_success:
  - docker ps -a
  - lsof -i :8080
  - netstat -anl
- - curl -sw '%{http_code}\n' http://localhost:9080/health
  - curl -sw '%{http_code}\n' http://localhost:8080/health
  - curl -sw '%{http_code}\n' http://localhost:8011/health
  - docker network create katlasnet

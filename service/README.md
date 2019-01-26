@@ -1,1 +1,0 @@
-# katlas REST Service

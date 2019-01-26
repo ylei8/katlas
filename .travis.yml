@@ -23,7 +23,7 @@ before_script:
  - netstat -anl
  - docker ps -a
  - curl -sw '%{http_code}\n' http://localhost:8080/health
- - curl -sw '%{http_code}\n' http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
  - TRAVIS_COMMIT_SHORTID="${TRAVIS_COMMIT:0:7}"
  - echo "${TRAVIS_COMMIT_SHORTID}"
 script:
@@ -34,22 +34,22 @@ script:
 after_success:
  - cd $TRAVIS_BUILD_DIR/service
  - go run server.go 2> output.out &
- #- docker run -d -it -p 8011:8011 -e ENV_NAMESPACE=qal -e SERVER_TYPE=http -e DGRAPH_HOST=localhost:9080 --name katlas-service katlas-service:${TRAVIS_COMMIT_SHORTID}
- #- docker logs katlas-service
+ - docker run -d -it -p 8011:8011 -e ENV_NAMESPACE=qal -e SERVER_TYPE=http -e DGRAPH_HOST=localhost:9080 --name katlas-service katlas-service:${TRAVIS_COMMIT_SHORTID}
+ - docker logs katlas-service
  - sleep 10s
- - cat output.out
- #- docker ps -a
+ - docker ps -a
  - lsof -i :8080
  - netstat -anl
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
+ - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl -sw '%{http_code}\n' http://localhost:8011/health
  - docker network create katlasnet
  - docker network connect katlasnet diggy
  - docker network connect katlasnet katlas-service
-  - curl -sw '%{http_code}\n' http://localhost:8080/health
- - curl -sw '%{http_code}\n' http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
- - curl -sw '%{http_code}\n' http://localhost:8011/health
  
- - curl -sw '%{http_code}\n' http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
+ #- curl http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
  - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
  - statusCode=$(curl -sw '%{http_code}\n' http://localhost:8011/v1/query?name=pod -o /dev/null)
  - echo $statusCode
  - |

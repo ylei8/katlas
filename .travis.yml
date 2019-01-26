@@ -21,7 +21,7 @@ before_script:
  - docker exec -d -it diggy dgraph alpha --lru_mb 2048 --zero localhost:5080
  - TRAVIS_COMMIT_SHORTID="${TRAVIS_COMMIT:0:7}"
  - echo "${TRAVIS_COMMIT_SHORTID}"
-#script:
+script:
 # - cd $TRAVIS_BUILD_DIR/service
  - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT} .
  - docker images katlas-service:${TRAVIS_COMMIT}

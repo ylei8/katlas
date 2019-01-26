@@ -28,11 +28,12 @@ before_script:
  - echo "${TRAVIS_COMMIT_SHORTID}"
 script:
  - cd $TRAVIS_BUILD_DIR/service
+ - pwd
+ - ls -l
  - ls -l util/
- - sleep 5s
+ - ls -l [ab]*/
  - docker build --no-cache -f Dockerfile -t katlas-service:${TRAVIS_COMMIT_SHORTID} .
  - docker images katlas-service:${TRAVIS_COMMIT_SHORTID}
-
 after_success:
  - cd $TRAVIS_BUILD_DIR/service
 # - go run server.go 2> output.out &

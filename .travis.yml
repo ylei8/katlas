@@ -35,18 +35,18 @@ after_success:
  - docker ps -a
  #- cat ./output.out
  - lsof -i :8080
- - lsof -i :9080
- - lsof -i :8011
- - curl http://localhost:8080/health
- - curl http://localhost:9080/health
+ - netstat -anL
+ - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
  #- curl http://localhost:8011/health
  #- docker network create katlasnet
  #- docker network connect katlasnet diggy
  #- docker network connect katlasnet katlas-service
- #- curl http://127.0.0.1:8080/health
+ 
  #- curl http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
- #- statusCode=$(curl -sw '%{http_code}\n' http://127.0.0.1:8011/v1/query?name=pod -o /dev/null)
- - statusCode=$(curl -sw '%{http_code}\n' http://localhost:8080/health -o /dev/null)
+ - curl -sw '%{http_code}\n' http://localhost:8080/health
+ - curl -sw '%{http_code}\n' http://localhost:9080/health
+ - statusCode=$(curl -sw '%{http_code}\n' http://localhost:8011/v1/query?name=pod -o /dev/null)
  - echo $statusCode
  - |
    if [ $statusCode -ne "200" ]; then

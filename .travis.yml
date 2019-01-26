@@ -52,7 +52,8 @@ after_success:
  #- cat output.out
  #- curl http://localhost:8080/query -XPOST -d $'{me(func: has(starring)) {name}}'
  - curl -sw '%{http_code}\n' http://localhost:8080/health
- - curl -sw '%{http_code}\n' http://localhost:9080/health
+ - curl -sw '%{http_code}\n' http://localhost:8011/health
+ - curl -sw '%{http_code}\n' http://localhost:8011/v1/query?name=pod
  - statusCode=$(curl -sw '%{http_code}\n' http://localhost:8011/v1/query?name=pod -o /dev/null)
  - echo $statusCode
  - |
